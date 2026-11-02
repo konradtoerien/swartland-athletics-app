@@ -2,9 +2,16 @@ import sqlite3
 import pandas as pd
 import streamlit as st
 
-# Check for Supabase secrets
-SUPABASE_URL = st.secrets.get("SUPABASE_URL", None)
-SUPABASE_KEY = st.secrets.get("SUPABASE_KEY", None)
+SUPABASE_URL = None
+SUPABASE_KEY = None
+
+try:
+    if "SUPABASE_URL" in st.secrets:
+        SUPABASE_URL = st.secrets["SUPABASE_URL"]
+    if "SUPABASE_KEY" in st.secrets:
+        SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+except Exception:
+    pass
 
 if SUPABASE_URL and SUPABASE_KEY:
     from supabase import create_client
@@ -16,12 +23,10 @@ def get_local_connection():
     return sqlite3.connect("athletics.db", check_same_thread=False)
 
 def init_db():
-    """Initializes local SQLite database tables if Supabase is not connected."""
     if not supabase_client:
         conn = get_local_connection()
         cursor = conn.cursor()
         
-        # Athletes Table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS athletes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,26 +38,39 @@ def init_db():
                 events TEXT NOT NULL
             )
         ''')
-        
-        # Records Table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS event_records (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 event_name TEXT NOT NULL,
                 gender TEXT NOT NULL,
                 age_group TEXT NOT NULL,
-                record_value REAL NOT NULL,
+                record_value TEXT NOT NULL,
                 holder TEXT NOT NULL,
                 year INTEGER NOT NULL
             )
         ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS event_results (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                event_name TEXT NOT NULL,
+                gender TEXT NOT NULL,
+                age_group TEXT NOT NULL,
+                place INTEGER,
+                athlete_id INTEGER,
+                athlete_name TEXT,
+                school TEXT,
+                result_value TEXT,
+                asa_points INTEGER,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        
         conn.commit()
         conn.close()
 
 init_db()
 
 def insert_athletes(df: pd.DataFrame):
-    """Inserts a DataFrame of athletes into the database."""
     if supabase_client:
         records = df.to_dict(orient="records")
         supabase_client.table("athletes").insert(records).execute()
@@ -62,7 +80,6 @@ def insert_athletes(df: pd.DataFrame):
         conn.close()
 
 def fetch_athletes(filters=None):
-    """Fetches athlete records based on optional field filters."""
     if supabase_client:
         query = supabase_client.table("athletes").select("*")
         if filters:
@@ -83,3 +100,62 @@ def fetch_athletes(filters=None):
         df = pd.read_sql_query(query, conn, params=params)
         conn.close()
         return df
+
+def insert_records(df: pd.DataFrame):
+    conn = get_local_connection()
+    df.to_sql("event_records", conn, if_exists="append", index=False)
+    conn.close()
+
+def fetch_all_records():
+    conn = get_local_connection()
+    df = pd.read_sql_query("SELECT * FROM event_records", conn)
+    conn.close()
+    return df
+
+def delete_record(record_id: int):
+    conn = get_local_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM event_records WHERE id = ?", (record_id,))
+    conn.commit()
+    conn.close()
+
+def fetch_event_record(event_name, gender, age_group):
+    conn = get_local_connection()
+    query = "SELECT * FROM event_records WHERE event_name = ? AND gender = ? AND age_group = ?"
+    df = pd.read_sql_query(query, conn, params=[event_name, gender, age_group])
+    conn.close()
+    return df.iloc[0].to_dict() if not df.empty else None
+
+def save_event_results(event_name, gender, age_group, results_list):
+    conn = get_local_connection()
+    cursor = conn.cursor()
+    for r in results_list:
+        cursor.execute('''
+            INSERT INTO event_results (event_name, gender, age_group, place, athlete_id, athlete_name, school, result_value, asa_points)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (event_name, gender, age_group, r.get("place", 0), r["athlete_id"], r["name"], r["school"], r["result_value"], r["asa_points"]))
+    conn.commit()
+    conn.close()
+
+def fetch_event_results(event_name, gender, age_group):
+    conn = get_local_connection()
+    query = "SELECT place as Plek, athlete_name as 'Atleet Naam', school as Skool, result_value as Uitslag, asa_points as 'ASA Punte' FROM event_results WHERE event_name = ? AND gender = ? AND age_group = ? ORDER BY place ASC"
+    df = pd.read_sql_query(query, conn, params=[event_name, gender, age_group])
+    conn.close()
+    return df
+
+def fetch_all_results():
+    conn = get_local_connection()
+    df = pd.read_sql_query("SELECT * FROM event_results ORDER BY timestamp DESC", conn)
+    conn.close()
+    return df
+
+def reset_database():
+    """Vee alle data uit die databasis tafels skoon."""
+    conn = get_local_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM athletes")
+    cursor.execute("DELETE FROM event_results")
+    cursor.execute("DELETE FROM event_records")
+    conn.commit()
+    conn.close()

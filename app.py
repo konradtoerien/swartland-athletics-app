@@ -1,27 +1,28 @@
 import streamlit as st
+from constants import apply_swartland_theme
 
 st.set_page_config(
-page_title="Swartland Athletics Portal",
-page_icon="🏃",
-layout="wide",
-initial_sidebar_state="expanded"
+    page_title="Swartland Atletiek Portaal",
+    page_icon="🏆",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-st.title("🏃 Swartland Athletics Portal")
-st.subheader("Meet Management & Real-Time Officiating System")
+apply_swartland_theme()
+
+st.title("🏆 Laerskool Swartland Atletiek Portaal")
+st.subheader("Byeenkomsbestuur & Intydse Beoordelingsstelsel")
 
 st.markdown("""
-Welcome to the Athletics Meet Management System. Select a module from the left sidebar to get started:
+Welkom by die atletiekbestuurstelsel. Kies 'n module uit die kieslys aan die linkerkant om te begin:
 
-1. **📋 Setup & Import:** Register athletes via CSV/Excel template or add individual late entries.
+1. **📋 Setup & Import:** Laai atletelyste in via Excel met **Seuns (M)** en **Dogters (F)** tabs.
+2. **📄 Draw Sheets:** Bekyk amptelike lotingslyste in 'n snelbesigtigings-venster of druk dit as PDF.
+3. **⏱️ Officiating:** Aangepaste punte- en tydsfunksie vir beamptes om resultate live aan te teken.
+4. **🏆 Rekords:** Bestuur, voer in of uit via Excel, en bekyk alle amptelike byeenkomsrekords.
+5. **📊 Live Feed:** Regstreekse uitslae vir ouers, onderwysers en spanbestuurders.
+6. **🖨️ Reports:** Totale spanpunte, Victor/Victrix Ludorum en amptelike PDF uitslagopsommings.
+7. **📅 Program:** Bestuur die tydrooster van die dag, voer uit na PDF/Excel en hou vordering dop.
+""")
 
-2. **📄 Draw Sheets:** View, manage, and print official lane/event draw sheets with auto-added late entries.
-
-3. **⏱️ Officiating (Coming Next):** Record field attempts and track times live from officials' devices.
-
-4. **📊 Live Feed (Coming Next):** Public mobile-friendly view for parents, coaches, and team managers.
-
-5. **🖨️ Reports (Coming Next):** Aggregated team scores, Victor/Victrix Ludorum, and official PDF result summaries.
-   """)
-
-st.info("💡 **Local Mode Active:** SQLite is currently handling local data. To sync multiple devices across the track in real-time, connect Supabase credentials in `.streamlit/secrets.toml`.")
+st.info("💡 **Lokale Modus Aktief:** SQLite hanteer op die oomblik data plaaslik. Koppel Supabase in `.streamlit/secrets.toml` vir intydse sinchronisasie tussen verskeie toestelle.")
