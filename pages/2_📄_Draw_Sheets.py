@@ -2,27 +2,29 @@ import io
 import streamlit as st
 import pandas as pd
 from db import fetch_athletes, insert_athletes
+from constants import AGE_GROUPS, get_events_for_age_and_gender
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
 st.set_page_config(page_title="Draw Sheets", page_icon="📄", layout="wide")
-st.title("📄 Event Draw Sheets")
+st.title("📄 Primary School Draw Sheets")
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    selected_event = st.selectbox("Discipline", ["100m", "200m", "800m", "High Jump", "Long Jump", "Shot Put", "Discus"])
+    selected_age = st.selectbox("Age Group", AGE_GROUPS)
 with col2:
     selected_gender = st.selectbox("Gender", ["Seuns", "Dogters"])
 with col3:
-    selected_age = st.selectbox("Age Group", ["u/7", "u/8", "u/9", "u/10", "u/11", "u/12", "u/13", "u/14", "u/15", "u/17"])
+    available_events = get_events_for_age_and_gender(selected_age, selected_gender)
+    selected_event = st.selectbox("Discipline / Event", available_events if available_events else ["No events available"])
 
 st.divider()
 
 all_athletes = fetch_athletes({"gender": selected_gender, "age_group": selected_age})
 
-if not all_athletes.empty:
+if not all_athletes.empty and selected_event and selected_event != "No events available":
     matching_athletes = all_athletes[all_athletes['events'].str.contains(selected_event, case=False, na=False)].copy()
 else:
     matching_athletes = pd.DataFrame()
@@ -84,7 +86,7 @@ with st.expander("➕ Add Late Walk-On Athlete"):
         l_school = c3.text_input("School")
         
         if st.form_submit_button("Add to Draw Sheet"):
-            if l_first and l_last and l_school:
+            if l_first and l_last and l_school and selected_event != "No events available":
                 late_df = pd.DataFrame([{
                     "first_name": l_first,
                     "last_name": l_last,
