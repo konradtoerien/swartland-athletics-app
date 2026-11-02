@@ -27,6 +27,7 @@ def init_db():
         conn = get_local_connection()
         cursor = conn.cursor()
         
+        # Tabel vir Atlete
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS athletes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,6 +39,8 @@ def init_db():
                 events TEXT NOT NULL
             )
         ''')
+        
+        # Tabel vir Rekords
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS event_records (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,6 +52,8 @@ def init_db():
                 year INTEGER NOT NULL
             )
         ''')
+        
+        # Tabel vir Uitslae
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS event_results (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,11 +70,32 @@ def init_db():
             )
         ''')
         
+        # Tabel vir Program / Tydrooster
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS event_program (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                item_no INTEGER NOT NULL,
+                start_time TEXT NOT NULL,
+                age_group TEXT NOT NULL,
+                gender TEXT NOT NULL,
+                event_name TEXT NOT NULL,
+                venue TEXT NOT NULL,
+                status TEXT DEFAULT 'Wagtend'
+            )
+        ''')
+        
+        # Auto-migration: Maak seker 'place' kolom bestaan
+        cursor.execute("PRAGMA table_info(event_results)")
+        columns = [column[1] for column in cursor.fetchall()]
+        if 'place' not in columns:
+            cursor.execute("ALTER TABLE event_results ADD COLUMN place INTEGER")
+
         conn.commit()
         conn.close()
 
 init_db()
 
+# ==================== ATLETE ====================
 def insert_athletes(df: pd.DataFrame):
     if supabase_client:
         records = df.to_dict(orient="records")
@@ -101,6 +127,7 @@ def fetch_athletes(filters=None):
         conn.close()
         return df
 
+# ==================== REKORDS ====================
 def insert_records(df: pd.DataFrame):
     conn = get_local_connection()
     df.to_sql("event_records", conn, if_exists="append", index=False)
@@ -126,6 +153,7 @@ def fetch_event_record(event_name, gender, age_group):
     conn.close()
     return df.iloc[0].to_dict() if not df.empty else None
 
+# ==================== UITSLAE ====================
 def save_event_results(event_name, gender, age_group, results_list):
     conn = get_local_connection()
     cursor = conn.cursor()
@@ -150,12 +178,13 @@ def fetch_all_results():
     conn.close()
     return df
 
+# ==================== RESET ====================
 def reset_database():
-    """Vee alle data uit die databasis tafels skoon."""
     conn = get_local_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM athletes")
     cursor.execute("DELETE FROM event_results")
     cursor.execute("DELETE FROM event_records")
+    cursor.execute("DELETE FROM event_program")
     conn.commit()
     conn.close()
