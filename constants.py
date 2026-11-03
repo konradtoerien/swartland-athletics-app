@@ -55,29 +55,43 @@ ALL_DISCIPLINES = [
 ]
 
 def apply_swartland_theme():
-    """LSS Tema met voorgeskrewe kontras vir knoppies, file-uploaders en sidebar."""
+    """LSS Tema met veilige mobiele kieslys-knoppie en duidelike kontras."""
     css_code = """
         <style>
-            /* 1. Verberg Boonste Header & Footer */
+            /* 1. Maak Header deursigtig sodat die Mobiele Kieslysknoppie sigbaar bly */
             header[data-testid="stHeader"] {
+                background-color: transparent !important;
+                z-index: 99999 !important;
+            }
+            
+            /* Verberg net die regterkantste Streamlit-menu/status (geen opskrifte) */
+            #MainMenu, footer {
                 visibility: hidden !important;
                 height: 0px !important;
-            }
-            footer {
-                visibility: hidden !important;
-                height: 0px !important;
-            }
-            #MainMenu {
-                visibility: hidden !important;
             }
 
-            /* 2. Hoof Agtergrond */
+            /* 2. Maak die Mobiele Sidebar Toggle Button (die 3 streepies/pyltjie) DUIDELIK SIGBAAR */
+            [data-testid="stSidebarCollapsedControl"],
+            button[data-testid="baseButton-header"] {
+                visibility: visible !important;
+                display: flex !important;
+                background-color: #F4C430 !important;
+                color: #0A192F !important;
+                border-radius: 6px !important;
+                padding: 6px !important;
+                margin: 5px !important;
+            }
+            [data-testid="stSidebarCollapsedControl"] * {
+                color: #0A192F !important;
+            }
+
+            /* 3. Hoof Agtergrond */
             .stApp {
                 background-color: #0A192F !important;
                 color: #FFFFFF !important;
             }
             
-            /* 3. Dwing die Kantlyn (Sidebar) na Donkerblou */
+            /* 4. Dwing die Kantlyn (Sidebar) na Donkerblou */
             [data-testid="stSidebar"], 
             section[data-testid="stSidebar"],
             div[data-testid="stSidebarContent"] {
@@ -85,7 +99,7 @@ def apply_swartland_theme():
                 border-right: 2px solid #F4C430 !important;
             }
 
-            /* 4. Sidebar Teks en Skakels */
+            /* 5. Sidebar Teks en Skakels */
             [data-testid="stSidebar"] * {
                 color: #FFFFFF !important;
             }
@@ -105,7 +119,7 @@ def apply_swartland_theme():
                 color: #FFFFFF !important;
             }
 
-            /* 5. Hoofskerm Opskrifte en Teks */
+            /* 6. Hoofskerm Opskrifte en Teks */
             h1, h2, h3, h4, label {
                 color: #F4C430 !important;
                 font-family: 'Segoe UI', Arial, sans-serif !important;
@@ -114,7 +128,7 @@ def apply_swartland_theme():
                 color: #E6F1FF !important;
             }
 
-            /* 6. Standard Knoppies EN Download Buttons */
+            /* 7. Knoppies EN Download Buttons */
             .stButton>button, 
             div[data-testid="stDownloadButton"]>button,
             .stDownloadButton>button {
@@ -140,54 +154,5 @@ def apply_swartland_theme():
                 color: #F4C430 !important;
             }
 
-            /* 7. File Uploader Styl (Regstelling vir Oplaaiblok) */
+            /* 8. File Uploader Styl */
             [data-testid="stFileUploader"] {
-                background-color: #112240 !important;
-                border: 1px dashed #F4C430 !important;
-                border-radius: 8px !important;
-                padding: 10px !important;
-            }
-            [data-testid="stFileUploader"] * {
-                color: #E6F1FF !important;
-            }
-            [data-testid="stFileUploader"] button {
-                background-color: #F4C430 !important;
-                border: 1px solid #F4C430 !important;
-            }
-            [data-testid="stFileUploader"] button * {
-                color: #0A192F !important;
-                font-weight: bold !important;
-            }
-
-            /* 8. Invoervelde */
-            .stTextInput>div>div>input, 
-            .stSelectbox>div>div>div, 
-            .stMultiSelect>div,
-            .stNumberInput>div>div>input {
-                background-color: #112240 !important;
-                color: #FFFFFF !important;
-                border: 1px solid #F4C430 !important;
-            }
-
-            /* Mobiele Kantlyn Pyltjie */
-            button[data-testid="baseButton-header"] {
-                color: #F4C430 !important;
-                background-color: #020C1B !important;
-                visibility: visible !important;
-            }
-
-            /* Logo Prentjie */
-            section[data-testid="stSidebar"] img {
-                margin-bottom: 10px;
-                border-radius: 4px;
-            }
-        </style>
-    """
-    st.markdown(css_code, unsafe_allow_html=True)
-    
-    if os.path.exists(LOGO_PATH):
-        st.sidebar.image(LOGO_PATH, width=180)
-    else:
-        st.sidebar.warning(f"Logo nie gevind nie ({LOGO_PATH})")
-        
-    st.sidebar.markdown("### Laerskool Swartland")
