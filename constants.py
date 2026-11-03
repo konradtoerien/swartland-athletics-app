@@ -55,44 +55,86 @@ ALL_DISCIPLINES = [
 ]
 
 def apply_swartland_theme():
-    """LSS Tema en Vertoning van Logo op die Kantlyn (Sidebar)."""
+    """LSS Tema en Vertoning van Logo op die Kantlyn (Sidebar) met mobiele korreksies."""
     st.markdown("""
         <style>
+            /* Hoof Toepassing Agtergrond */
             .stApp {
                 background-color: #0A192F !important;
                 color: #FFFFFF !important;
             }
-            div[data-testid="stSidebar"] {
+            
+            /* Kantlyn / Sidebar Style (Aangepas vir Fone) */
+            section[data-testid="stSidebar"] {
                 background-color: #020C1B !important;
-                border-right: 2px solid #F4C430;
+                border-right: 2px solid #F4C430 !important;
             }
-            div[data-testid="stSidebar"] * {
+            section[data-testid="stSidebar"] * {
+                color: #FFFFFF !important;
+            }
+            section[data-testid="stSidebar"] h1, 
+            section[data-testid="stSidebar"] h2, 
+            section[data-testid="stSidebar"] h3, 
+            section[data-testid="stSidebar"] span, 
+            section[data-testid="stSidebar"] a {
+                color: #F4C430 !important;
+                font-weight: bold !important;
+            }
+            
+            /* Navigasie Links in Sidebar */
+            div[data-testid="stSidebarNav"] ul li a div span {
+                color: #FFFFFF !important;
+                font-size: 1.05rem !important;
+            }
+            div[data-testid="stSidebarNav"] ul li a:hover div span {
                 color: #F4C430 !important;
             }
-            h1, h2, h3, h4, label, span {
+
+            /* Opskrifte en Teks op Hoofskerm */
+            h1, h2, h3, h4, label {
                 color: #F4C430 !important;
-                font-family: 'Segoe UI', Arial, sans-serif;
+                font-family: 'Segoe UI', Arial, sans-serif !important;
             }
-            p, div, td, th {
+            p, div, td, th, span {
                 color: #E6F1FF !important;
             }
-            .stTextInput>div>div>input, .stSelectbox>div>div>div, .stMultiSelect>div {
+
+            /* Invoervelde en Dropdowns vir Fone */
+            .stTextInput>div>div>input, 
+            .stSelectbox>div>div>div, 
+            .stMultiSelect>div,
+            .stNumberInput>div>div>input {
                 background-color: #112240 !important;
                 color: #FFFFFF !important;
                 border: 1px solid #F4C430 !important;
             }
+
+            /* Geel Koppies met Baie Duidelike Donkerblou Teks */
             .stButton>button {
                 background-color: #F4C430 !important;
-                color: #0A192F !important;
-                font-weight: bold !important;
                 border: 2px solid #F4C430 !important;
-                border-radius: 6px;
+                border-radius: 6px !important;
+            }
+            .stButton>button * {
+                color: #0A192F !important;
+                font-weight: 800 !important;
             }
             .stButton>button:hover {
                 background-color: #0A192F !important;
+                border: 2px solid #F4C430 !important;
+            }
+            .stButton>button:hover * {
                 color: #F4C430 !important;
             }
-            div[data-testid="stSidebar"] img {
+
+            /* Mobiele Kantlyn Pyltjie / Knoppie Sigbaarheid */
+            button[data-testid="baseButton-header"] {
+                color: #F4C430 !important;
+                background-color: #020C1B !important;
+            }
+
+            /* Logo Vertoning */
+            section[data-testid="stSidebar"] img {
                 margin-bottom: 10px;
                 border-radius: 4px;
             }
