@@ -55,96 +55,59 @@ ALL_DISCIPLINES = [
 ]
 
 def apply_swartland_theme():
-    """LSS Tema en Vertoning van Logo op die Kantlyn (Sidebar) met mobiele korreksies."""
+    """LSS Tema met voorgeskrewe kontras en versteekte Streamlit menus."""
     st.markdown("""
         <style>
-            /* Hoof Toepassing Agtergrond */
+            /* 1. Verberg die Boonste Header (Drie kolletjies & Running indicator) en Onderste Footer */
+            header[data-testid="stHeader"] {
+                visibility: hidden !important;
+                height: 0px !important;
+            }
+            footer {
+                visibility: hidden !important;
+                height: 0px !important;
+            }
+            #MainMenu {
+                visibility: hidden !important;
+            }
+
+            /* 2. Hoof Toepassing Agtergrond */
             .stApp {
                 background-color: #0A192F !important;
                 color: #FFFFFF !important;
             }
             
-            /* Kantlyn / Sidebar Style (Aangepas vir Fone) */
-            section[data-testid="stSidebar"] {
+            /* 3. Dwing die Kantlyn (Sidebar) na Donkerblou */
+            [data-testid="stSidebar"], 
+            section[data-testid="stSidebar"],
+            div[data-testid="stSidebarContent"] {
                 background-color: #020C1B !important;
                 border-right: 2px solid #F4C430 !important;
             }
-            section[data-testid="stSidebar"] * {
+
+            /* 4. Dwing alle Teks en Skakels in die Sidebar om Geel & Wit te wees */
+            [data-testid="stSidebar"] * {
                 color: #FFFFFF !important;
-            }
-            section[data-testid="stSidebar"] h1, 
-            section[data-testid="stSidebar"] h2, 
-            section[data-testid="stSidebar"] h3, 
-            section[data-testid="stSidebar"] span, 
-            section[data-testid="stSidebar"] a {
-                color: #F4C430 !important;
-                font-weight: bold !important;
             }
             
-            /* Navigasie Links in Sidebar */
-            div[data-testid="stSidebarNav"] ul li a div span {
-                color: #FFFFFF !important;
+            /* Sidebar Navigasie-skakels en Teks (Streamlit Nav) */
+            [data-testid="stSidebarNav"] ul li a,
+            [data-testid="stSidebarNav"] ul li a * {
+                background-color: transparent !important;
+                color: #F4C430 !important;
+                font-weight: bold !important;
                 font-size: 1.05rem !important;
             }
-            div[data-testid="stSidebarNav"] ul li a:hover div span {
-                color: #F4C430 !important;
-            }
 
-            /* Opskrifte en Teks op Hoofskerm */
-            h1, h2, h3, h4, label {
-                color: #F4C430 !important;
-                font-family: 'Segoe UI', Arial, sans-serif !important;
-            }
-            p, div, td, th, span {
-                color: #E6F1FF !important;
-            }
-
-            /* Invoervelde en Dropdowns vir Fone */
-            .stTextInput>div>div>input, 
-            .stSelectbox>div>div>div, 
-            .stMultiSelect>div,
-            .stNumberInput>div>div>input {
+            /* Aktiewe / Geselekteerde Bladsy in Sidebar */
+            [data-testid="stSidebarNav"] ul li a[aria-current="page"] {
                 background-color: #112240 !important;
-                color: #FFFFFF !important;
-                border: 1px solid #F4C430 !important;
-            }
-
-            /* Geel Koppies met Baie Duidelike Donkerblou Teks */
-            .stButton>button {
-                background-color: #F4C430 !important;
-                border: 2px solid #F4C430 !important;
-                border-radius: 6px !important;
-            }
-            .stButton>button * {
-                color: #0A192F !important;
-                font-weight: 800 !important;
-            }
-            .stButton>button:hover {
-                background-color: #0A192F !important;
-                border: 2px solid #F4C430 !important;
-            }
-            .stButton>button:hover * {
-                color: #F4C430 !important;
-            }
-
-            /* Mobiele Kantlyn Pyltjie / Knoppie Sigbaarheid */
-            button[data-testid="baseButton-header"] {
-                color: #F4C430 !important;
-                background-color: #020C1B !important;
-            }
-
-            /* Logo Vertoning */
-            section[data-testid="stSidebar"] img {
-                margin-bottom: 10px;
+                border-left: 4px solid #F4C430 !important;
                 border-radius: 4px;
             }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    # Vertoon die skool-logo bo-aan die kantlyn
-    if os.path.exists(LOGO_PATH):
-        st.sidebar.image(LOGO_PATH, width=180)
-    else:
-        st.sidebar.warning(f"Logo nie gevind nie ({LOGO_PATH})")
-        
-    st.sidebar.markdown("### Laerskool Swartland")
+            [data-testid="stSidebarNav"] ul li a[aria-current="page"] * {
+                color: #FFFFFF !important;
+            }
+
+            /* 5. Hoofskerm Opskrifte en Teks */
+            h1, h2
