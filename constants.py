@@ -56,103 +56,47 @@ ALL_DISCIPLINES = [
 
 def apply_swartland_theme():
     """LSS Tema met veilige mobiele kieslys-knoppie en duidelike kontras."""
-    css_code = """
-        <style>
-            /* 1. Maak Header deursigtig sodat die Mobiele Kieslysknoppie sigbaar bly */
-            header[data-testid="stHeader"] {
-                background-color: transparent !important;
-                z-index: 99999 !important;
-            }
-            
-            /* Verberg net die regterkantste Streamlit-menu/status (geen opskrifte) */
-            #MainMenu, footer {
-                visibility: hidden !important;
-                height: 0px !important;
-            }
-
-            /* 2. Maak die Mobiele Sidebar Toggle Button (die 3 streepies/pyltjie) DUIDELIK SIGBAAR */
-            [data-testid="stSidebarCollapsedControl"],
-            button[data-testid="baseButton-header"] {
-                visibility: visible !important;
-                display: flex !important;
-                background-color: #F4C430 !important;
-                color: #0A192F !important;
-                border-radius: 6px !important;
-                padding: 6px !important;
-                margin: 5px !important;
-            }
-            [data-testid="stSidebarCollapsedControl"] * {
-                color: #0A192F !important;
-            }
-
-            /* 3. Hoof Agtergrond */
-            .stApp {
-                background-color: #0A192F !important;
-                color: #FFFFFF !important;
-            }
-            
-            /* 4. Dwing die Kantlyn (Sidebar) na Donkerblou */
-            [data-testid="stSidebar"], 
-            section[data-testid="stSidebar"],
-            div[data-testid="stSidebarContent"] {
-                background-color: #020C1B !important;
-                border-right: 2px solid #F4C430 !important;
-            }
-
-            /* 5. Sidebar Teks en Skakels */
-            [data-testid="stSidebar"] * {
-                color: #FFFFFF !important;
-            }
-            [data-testid="stSidebarNav"] ul li a,
-            [data-testid="stSidebarNav"] ul li a * {
-                background-color: transparent !important;
-                color: #F4C430 !important;
-                font-weight: bold !important;
-                font-size: 1.05rem !important;
-            }
-            [data-testid="stSidebarNav"] ul li a[aria-current="page"] {
-                background-color: #112240 !important;
-                border-left: 4px solid #F4C430 !important;
-                border-radius: 4px;
-            }
-            [data-testid="stSidebarNav"] ul li a[aria-current="page"] * {
-                color: #FFFFFF !important;
-            }
-
-            /* 6. Hoofskerm Opskrifte en Teks */
-            h1, h2, h3, h4, label {
-                color: #F4C430 !important;
-                font-family: 'Segoe UI', Arial, sans-serif !important;
-            }
-            p, div, td, th, span {
-                color: #E6F1FF !important;
-            }
-
-            /* 7. Knoppies EN Download Buttons */
-            .stButton>button, 
-            div[data-testid="stDownloadButton"]>button,
-            .stDownloadButton>button {
-                background-color: #F4C430 !important;
-                border: 2px solid #F4C430 !important;
-                border-radius: 6px !important;
-            }
-            .stButton>button *, 
-            div[data-testid="stDownloadButton"]>button *,
-            .stDownloadButton>button * {
-                color: #0A192F !important;
-                font-weight: 800 !important;
-            }
-            .stButton>button:hover, 
-            div[data-testid="stDownloadButton"]>button:hover,
-            .stDownloadButton>button:hover {
-                background-color: #0A192F !important;
-                border: 2px solid #F4C430 !important;
-            }
-            .stButton>button:hover *, 
-            div[data-testid="stDownloadButton"]>button:hover *,
-            .stDownloadButton>button:hover * {
-                color: #F4C430 !important;
-            }
-
-            /* 8. File Uploader Styl */
-            [data-testid="stFileUploader"] {
+    css_code = (
+        "<style>"
+        "header[data-testid='stHeader'] { background-color: transparent !important; z-index: 99999 !important; }"
+        "#MainMenu, footer { visibility: hidden !important; height: 0px !important; }"
+        "[data-testid='stSidebarCollapsedControl'], button[data-testid='baseButton-header'] { "
+        "visibility: visible !important; display: flex !important; background-color: #F4C430 !important; "
+        "color: #0A192F !important; border-radius: 6px !important; padding: 6px !important; margin: 5px !important; }"
+        "[data-testid='stSidebarCollapsedControl'] * { color: #0A192F !important; }"
+        ".stApp { background-color: #0A192F !important; color: #FFFFFF !important; }"
+        "[data-testid='stSidebar'], section[data-testid='stSidebar'], div[data-testid='stSidebarContent'] { "
+        "background-color: #020C1B !important; border-right: 2px solid #F4C430 !important; }"
+        "[data-testid='stSidebar'] * { color: #FFFFFF !important; }"
+        "[data-testid='stSidebarNav'] ul li a, [data-testid='stSidebarNav'] ul li a * { "
+        "background-color: transparent !important; color: #F4C430 !important; font-weight: bold !important; font-size: 1.05rem !important; }"
+        "[data-testid='stSidebarNav'] ul li a[aria-current='page'] { "
+        "background-color: #112240 !important; border-left: 4px solid #F4C430 !important; border-radius: 4px; }"
+        "[data-testid='stSidebarNav'] ul li a[aria-current='page'] * { color: #FFFFFF !important; }"
+        "h1, h2, h3, h4, label { color: #F4C430 !important; font-family: 'Segoe UI', Arial, sans-serif !important; }"
+        "p, div, td, th, span { color: #E6F1FF !important; }"
+        ".stButton>button, div[data-testid='stDownloadButton']>button, .stDownloadButton>button { "
+        "background-color: #F4C430 !important; border: 2px solid #F4C430 !important; border-radius: 6px !important; }"
+        ".stButton>button *, div[data-testid='stDownloadButton']>button *, .stDownloadButton>button * { "
+        "color: #0A192F !important; font-weight: 800 !important; }"
+        ".stButton>button:hover, div[data-testid='stDownloadButton']>button:hover, .stDownloadButton>button:hover { "
+        "background-color: #0A192F !important; border: 2px solid #F4C430 !important; }"
+        ".stButton>button:hover *, div[data-testid='stDownloadButton']>button:hover *, .stDownloadButton>button:hover * { "
+        "color: #F4C430 !important; }"
+        "[data-testid='stFileUploader'] { background-color: #112240 !important; border: 1px dashed #F4C430 !important; border-radius: 8px !important; padding: 10px !important; }"
+        "[data-testid='stFileUploader'] * { color: #E6F1FF !important; }"
+        "[data-testid='stFileUploader'] button { background-color: #F4C430 !important; border: 1px solid #F4C430 !important; }"
+        "[data-testid='stFileUploader'] button * { color: #0A192F !important; font-weight: bold !important; }"
+        ".stTextInput>div>div>input, .stSelectbox>div>div>div, .stMultiSelect>div, .stNumberInput>div>div>input { "
+        "background-color: #112240 !important; color: #FFFFFF !important; border: 1px solid #F4C430 !important; }"
+        "section[data-testid='stSidebar'] img { margin-bottom: 10px; border-radius: 4px; }"
+        "</style>"
+    )
+    st.markdown(css_code, unsafe_allow_html=True)
+    
+    if os.path.exists(LOGO_PATH):
+        st.sidebar.image(LOGO_PATH, width=180)
+    else:
+        st.sidebar.warning(f"Logo nie gevind nie ({LOGO_PATH})")
+        
+    st.sidebar.markdown("### Laerskool Swartland")
