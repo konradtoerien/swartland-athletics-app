@@ -55,10 +55,10 @@ ALL_DISCIPLINES = [
 ]
 
 def apply_swartland_theme():
-    """LSS Tema met donkerblou sidebar, duidelike geel teks en versteekte Streamlit menus."""
+    """LSS Tema met voorgeskrewe kontras vir knoppies, file-uploaders en sidebar."""
     css_code = """
         <style>
-            /* 1. Verberg Boonste Header & Podia/Footer */
+            /* 1. Verberg Boonste Header & Footer */
             header[data-testid="stHeader"] {
                 visibility: hidden !important;
                 height: 0px !important;
@@ -85,12 +85,10 @@ def apply_swartland_theme():
                 border-right: 2px solid #F4C430 !important;
             }
 
-            /* 4. Dwing Teks in die Sidebar om Geel & Wit te wees */
+            /* 4. Sidebar Teks en Skakels */
             [data-testid="stSidebar"] * {
                 color: #FFFFFF !important;
             }
-            
-            /* Sidebar Navigasie-skakels */
             [data-testid="stSidebarNav"] ul li a,
             [data-testid="stSidebarNav"] ul li a * {
                 background-color: transparent !important;
@@ -98,8 +96,6 @@ def apply_swartland_theme():
                 font-weight: bold !important;
                 font-size: 1.05rem !important;
             }
-
-            /* Aktiewe Bladsy in Sidebar */
             [data-testid="stSidebarNav"] ul li a[aria-current="page"] {
                 background-color: #112240 !important;
                 border-left: 4px solid #F4C430 !important;
@@ -118,7 +114,52 @@ def apply_swartland_theme():
                 color: #E6F1FF !important;
             }
 
-            /* 6. Invoervelde */
+            /* 6. Standard Knoppies EN Download Buttons */
+            .stButton>button, 
+            div[data-testid="stDownloadButton"]>button,
+            .stDownloadButton>button {
+                background-color: #F4C430 !important;
+                border: 2px solid #F4C430 !important;
+                border-radius: 6px !important;
+            }
+            .stButton>button *, 
+            div[data-testid="stDownloadButton"]>button *,
+            .stDownloadButton>button * {
+                color: #0A192F !important;
+                font-weight: 800 !important;
+            }
+            .stButton>button:hover, 
+            div[data-testid="stDownloadButton"]>button:hover,
+            .stDownloadButton>button:hover {
+                background-color: #0A192F !important;
+                border: 2px solid #F4C430 !important;
+            }
+            .stButton>button:hover *, 
+            div[data-testid="stDownloadButton"]>button:hover *,
+            .stDownloadButton>button:hover * {
+                color: #F4C430 !important;
+            }
+
+            /* 7. File Uploader Styl (Regstelling vir Oplaaiblok) */
+            [data-testid="stFileUploader"] {
+                background-color: #112240 !important;
+                border: 1px dashed #F4C430 !important;
+                border-radius: 8px !important;
+                padding: 10px !important;
+            }
+            [data-testid="stFileUploader"] * {
+                color: #E6F1FF !important;
+            }
+            [data-testid="stFileUploader"] button {
+                background-color: #F4C430 !important;
+                border: 1px solid #F4C430 !important;
+            }
+            [data-testid="stFileUploader"] button * {
+                color: #0A192F !important;
+                font-weight: bold !important;
+            }
+
+            /* 8. Invoervelde */
             .stTextInput>div>div>input, 
             .stSelectbox>div>div>div, 
             .stMultiSelect>div,
@@ -126,24 +167,6 @@ def apply_swartland_theme():
                 background-color: #112240 !important;
                 color: #FFFFFF !important;
                 border: 1px solid #F4C430 !important;
-            }
-
-            /* 7. Knoppies: Geel met Donkerblou Teks */
-            .stButton>button {
-                background-color: #F4C430 !important;
-                border: 2px solid #F4C430 !important;
-                border-radius: 6px !important;
-            }
-            .stButton>button * {
-                color: #0A192F !important;
-                font-weight: 800 !important;
-            }
-            .stButton>button:hover {
-                background-color: #0A192F !important;
-                border: 2px solid #F4C430 !important;
-            }
-            .stButton>button:hover * {
-                color: #F4C430 !important;
             }
 
             /* Mobiele Kantlyn Pyltjie */
